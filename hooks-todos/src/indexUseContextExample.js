@@ -8,9 +8,15 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+export const UserContext = React.createContext()
+
+const username = 'Greg'
+
 root.render(
-  <React.StrictMode>   
+  <React.StrictMode>
+    <UserContext.Provider value={username}>
       <App />
+    </UserContext.Provider>
   </React.StrictMode>
 );
 

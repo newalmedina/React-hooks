@@ -1,46 +1,35 @@
-import React,{useContext, useReducer} from 'react';
-import logo from './logo.svg';
+import React, {  useReducer } from 'react';
+
 import './App.css';
-import {UserContext} from './index'
-import {Button} from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
+import ToDoList from './ToDoList';
+export const TodosContext = React.createContext()
+
+
+const todosInitialState = {
+  todos: [
+    { id: 1, text: "Finishing writing hooks chapter" },
+    { id: 2, text: "Play with kids" },
+    { id: 3, text: "Read bible" }
+  ]
+}
+
+function todosReducer(state, action) {
+  switch (action.type) {
+    default:
+      return todosInitialState
+  }
+}
 
 function App() {
-  const value = useContext(UserContext)
- 
-  const initialState={
-    count:0
-  }
 
-  const [state, dispatch] = useReducer(reducer, initialState)
-
-  function reducer(state,action){
-    switch (action.type) {
-      case 'increment':
-        return {count:state.count+1}    
-        
-      case 'decrement':
-        return {count:state.count-1}    
-
-      case 'reset':
-        return initialState    
-
-      default:
-        return initialState    
-    }
-    
-      
-  }
+  const [state,dispatch] =useReducer(todosReducer,todosInitialState)
 
   return (
     <div>
-      Received, {value}
-
-      <h1>Count: {state.count}</h1>
-      <br/>
-
-      <Button onClick={()=>dispatch({type:'increment'})}>Increment</Button>
-      <Button variant='secondary' className="ms-2" onClick={()=>dispatch({type:'decrement'})}>Decrement</Button>
-      <Button variant='success' className="ms-2" onClick={()=>dispatch({type:'reset'})}>Reset</Button>
+    <TodosContext.Provider value={{state,dispatch}}>
+    <ToDoList/>
+    </TodosContext.Provider>
     </div>
   );
 }
