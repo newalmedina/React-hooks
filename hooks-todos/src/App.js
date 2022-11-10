@@ -1,9 +1,9 @@
-import React, {  useReducer } from 'react';
+import React, { useReducer } from 'react';
 
 import './App.css';
 import { Button } from 'react-bootstrap'
 import ToDoList from './ToDoList';
-export const TodosContext = React.createContext()
+
 
 
 const todosInitialState = {
@@ -21,15 +21,17 @@ function todosReducer(state, action) {
   }
 }
 
+export const TodosContext = React.createContext()
+
 function App() {
 
-  const [state,dispatch] =useReducer(todosReducer,todosInitialState)
+  const [state, dispatch] = useReducer(todosReducer, todosInitialState)
 
   return (
     <div>
-    <TodosContext.Provider value={{state,dispatch}}>
-    <ToDoList/>
-    </TodosContext.Provider>
+      <TodosContext.Provider value={{ state, dispatch }}>
+        <ToDoList />
+      </TodosContext.Provider>
     </div>
   );
 }
