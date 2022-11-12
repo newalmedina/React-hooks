@@ -1,0 +1,20 @@
+
+*******************
+PARA PASAR VARIABLES GLOBALES Y NO PASARLA POR COMPONENTES QUE NO ESTAN RELACIONADO SE USA EL HOOK 'USECONTEXT
+-   componente padre    
+        export const UserContext = React.createContext()
+        <UserContext.Provider value={username}>
+            <App />
+        </UserContext.Provider>
+
+-   componente hijo
+    import {UserContext} from './index'
+    function App() {
+        const value = useContext(UserContext)
+
+        return (
+            <div>
+            Received, {value}
+            </div>
+        );
+    }
