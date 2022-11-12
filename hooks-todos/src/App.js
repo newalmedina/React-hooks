@@ -3,6 +3,7 @@ import React, { useReducer } from 'react';
 import './App.css';
 import { Button } from 'react-bootstrap'
 import ToDoList from './ToDoList';
+import { v4 as uuidv4 } from 'uuid'
 
 
 
@@ -16,6 +17,25 @@ const todosInitialState = {
 
 function todosReducer(state, action) {
   switch (action.type) {
+    case 'add':
+      const newTodo = { id: uuidv4(), text: action.payload }
+      const addedTodos = [...state.todos, newTodo]
+      return { ...state, todos: addedTodos }
+
+    case 'edit':
+      const updatedToDo = { ...action.payload }
+      const updatedToDoIndex = state.todos.findIndex(t => t.id === action.payload.id)
+      const updatedToDos = [
+        ...state.todos.slice(0, updatedToDoIndex),
+        updatedToDo,
+        ...state.todos.slice(updatedToDoIndex + 1)
+      ];
+      return { ...state, todos: updatedToDos }
+
+    case 'delete':
+      const filteredTodoState = state.todos.filter(todo => todo.id !== action.payload.id)
+      return { ...state, todos: filteredTodoState }
+
     default:
       return todosInitialState
   }
