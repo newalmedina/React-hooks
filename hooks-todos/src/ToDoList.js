@@ -1,22 +1,36 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { TodosContext } from './App';
 import { Button, Form, Table } from 'react-bootstrap'
+import useAPI from './useAPI';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid'
 
-const ToDoList = () => {
+const ToDoList = (props) => {
     const { state, dispatch } = useContext(TodosContext)
     const [todoText, setTodoText] = useState("")
     const [editMode, setEditMode] = useState(false)
     const [editTodo, setEditTodo] = useState(null)
     const buttonTitle = editMode ? "Edit" : "Add"
 
-    const saveItem = event => {
+    const endpoint = props.path + "todos/"
+    const savedTodos = useAPI(endpoint)
+
+    useEffect(() => {
+        dispatch({ type: 'get', payload: savedTodos })
+
+    }, [savedTodos]);
+
+    const saveItem = async event => {
         event.preventDefault();
         if (editMode) {
+            await axios.patch(endpoint + editTodo.id, { text: todoText })
             dispatch({ type: 'edit', payload: { ...editTodo, text: todoText } })
             setEditMode(false)
             setEditTodo(null)
         } else {
-            dispatch({ type: 'add', payload: todoText })
+            const newTodo = { id: uuidv4(), text: todoText }
+            await axios.post(endpoint, newTodo)
+            dispatch({ type: 'add', payload: newTodo })
         }
         setTodoText("")
     }
@@ -42,7 +56,7 @@ const ToDoList = () => {
                     <tr>
                         <th>To Do</th>
                         <th>Edit</th>
-                        <th>Delete</th>
+                        <th style={{ color: "red" }}>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,8 +73,11 @@ const ToDoList = () => {
                                 </Button>
                             </td>
                             <td>
-                                <Button variant='danger' onClick={() =>
-                                    dispatch({ type: "delete", payload: todo })}>
+                                <Button variant='danger'
+                                    onClick={async () => {
+                                        await axios.delete(endpoint + todo.id)
+                                        dispatch({ type: "delete", payload: todo })
+                                    }}>
                                     Delete
                                 </Button>
                             </td>

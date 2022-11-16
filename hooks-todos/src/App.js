@@ -8,18 +8,17 @@ import { v4 as uuidv4 } from 'uuid'
 
 
 const todosInitialState = {
-  todos: [
-    { id: 1, text: "Finishing writing hooks chapter" },
-    { id: 2, text: "Play with kids" },
-    { id: 3, text: "Read bible" }
-  ]
+  todos: []
 }
 
 function todosReducer(state, action) {
   switch (action.type) {
+    case 'get':
+      return { ...state, todos: action.payload }
+
     case 'add':
-      const newTodo = { id: uuidv4(), text: action.payload }
-      const addedTodos = [...state.todos, newTodo]
+      // const newTodo = { id: uuidv4(), text: action.payload }
+      const addedTodos = [...state.todos, action.payload]
       return { ...state, todos: addedTodos }
 
     case 'edit':
@@ -44,13 +43,13 @@ function todosReducer(state, action) {
 export const TodosContext = React.createContext()
 
 function App() {
+  const urlBase = "http://localhost:3000/"
 
   const [state, dispatch] = useReducer(todosReducer, todosInitialState)
-
   return (
     <div>
       <TodosContext.Provider value={{ state, dispatch }}>
-        <ToDoList />
+        <ToDoList path={urlBase} />
       </TodosContext.Provider>
     </div>
   );
