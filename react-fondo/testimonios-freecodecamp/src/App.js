@@ -40,12 +40,7 @@ function App() {
         {testimonioList.map(testimonio => (
           <Testimonio
             key={testimonio.id}
-            nombre={testimonio.nombre}
-            pais={testimonio.pais}
-            imagen={testimonio.imagen}
-            cargo={testimonio.cargo}
-            empresa={testimonio.empresa}
-            testimonio={testimonio.testimonio}
+            testimonio={testimonio}
 
           />
         ))}
